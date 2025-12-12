@@ -12,12 +12,92 @@ jobs:
     env:
       FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
       FLY_APP_NAME: ${{ vars.FLY_APP_NAME || 'youdraapi-clone' }}
+      POSTGRES_SERVER: ${{ secrets.POSTGRES_SERVER }}
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+      POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      ACCESS_TOKEN_EXPIRE_MINUTES: ${{ secrets.ACCESS_TOKEN_EXPIRE_MINUTES }}
+      OPEN_AI_API_KEY: ${{ secrets.OPEN_AI_API_KEY }}
+      OPEN_AI_APIKEY: ${{ secrets.OPEN_AI_APIKEY }}
+      QDRANT_URL: ${{ secrets.QDRANT_URL }}
+      QDRANT_API_KEY: ${{ secrets.QDRANT_API_KEY }}
+      QDRANT_ACTIVITY_COLLECTION_NAME: ${{ secrets.QDRANT_ACTIVITY_COLLECTION_NAME }}
+      QDRANT_GOAL_BUILDER_COLLECTION_NAME: ${{ secrets.QDRANT_GOAL_BUILDER_COLLECTION_NAME }}
+      GOOGLE_GEMINI_API_KEY: ${{ secrets.GOOGLE_GEMINI_API_KEY }}
+      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+      LLM_FLAG: ${{ secrets.LLM_FLAG }}
+      RABBITMQ_QUEUE: ${{ secrets.RABBITMQ_QUEUE }}
+      RABBITMQ_USER: ${{ secrets.RABBITMQ_USER }}
+      RABBITMQ_PASSWORD: ${{ secrets.RABBITMQ_PASSWORD }}
+      RABBITMQ_HOST: ${{ secrets.RABBITMQ_HOST }}
+      RABBITMQ_PORT: ${{ secrets.RABBITMQ_PORT }}
+      RABBITMQ_VHOST: ${{ secrets.RABBITMQ_VHOST }}
+      SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+      STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+      STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+      STRIPE_CUSTOM_SEAT_PRICE_ID: ${{ secrets.STRIPE_CUSTOM_SEAT_PRICE_ID }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Set up Flyctl
         uses: superfly/flyctl-actions/setup-flyctl@v1
+
+      - name: Set Fly secrets
+        run: |
+          set -euo pipefail
+          : "${FLY_APP_NAME:=youdraapi-clone}"
+
+          required=(
+            POSTGRES_SERVER POSTGRES_USER POSTGRES_PASSWORD POSTGRES_DB POSTGRES_PORT
+            SECRET_KEY ACCESS_TOKEN_EXPIRE_MINUTES
+            OPEN_AI_API_KEY QDRANT_URL QDRANT_API_KEY
+            RABBITMQ_QUEUE RABBITMQ_USER RABBITMQ_PASSWORD RABBITMQ_HOST RABBITMQ_PORT RABBITMQ_VHOST
+            SENDGRID_API_KEY
+          )
+
+          missing=()
+          for key in "${required[@]}"; do
+            if [ -z "${!key:-}" ]; then
+              missing+=("$key")
+            fi
+          done
+
+          if [ "${#missing[@]}" -ne 0 ]; then
+            echo "Missing required secrets: ${missing[*]}"
+            exit 1
+          fi
+
+          cat <<EOF | flyctl secrets import --app "$FLY_APP_NAME" --stage
+POSTGRES_SERVER=${POSTGRES_SERVER}
+POSTGRES_USER=${POSTGRES_USER}
+POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+POSTGRES_DB=${POSTGRES_DB}
+POSTGRES_PORT=${POSTGRES_PORT}
+SECRET_KEY=${SECRET_KEY}
+ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}
+OPEN_AI_API_KEY=${OPEN_AI_API_KEY}
+OPEN_AI_APIKEY=${OPEN_AI_APIKEY}
+QDRANT_URL=${QDRANT_URL}
+QDRANT_API_KEY=${QDRANT_API_KEY}
+QDRANT_ACTIVITY_COLLECTION_NAME=${QDRANT_ACTIVITY_COLLECTION_NAME}
+QDRANT_GOAL_BUILDER_COLLECTION_NAME=${QDRANT_GOAL_BUILDER_COLLECTION_NAME}
+GOOGLE_GEMINI_API_KEY=${GOOGLE_GEMINI_API_KEY}
+GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+LLM_FLAG=${LLM_FLAG}
+RABBITMQ_QUEUE=${RABBITMQ_QUEUE}
+RABBITMQ_USER=${RABBITMQ_USER}
+RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
+RABBITMQ_HOST=${RABBITMQ_HOST}
+RABBITMQ_PORT=${RABBITMQ_PORT}
+RABBITMQ_VHOST=${RABBITMQ_VHOST}
+SENDGRID_API_KEY=${SENDGRID_API_KEY}
+STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+STRIPE_CUSTOM_SEAT_PRICE_ID=${STRIPE_CUSTOM_SEAT_PRICE_ID}
+EOF
 
       - name: Deploy
         run: |
