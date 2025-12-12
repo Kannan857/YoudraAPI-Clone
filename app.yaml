@@ -1,0 +1,17 @@
+runtime: python39  # Or python38, depending on your Python version
+entrypoint: gunicorn -w 4 -t 60 -k uvicorn.workers.UvicornWorker main:app
+
+runtime_config:
+  python_version: 3.9  # Match your runtime version
+
+instance_class: F2
+
+automatic_scaling:
+  min_instances: 1
+  max_instances: 10
+
+service: youdra-ai-backend  
+
+env_variables:
+  SECRET_MANAGER_ENABLED: true
+  JSON_APP_SECRETS_GSM_ID: projects/dreav-ai/secrets/youdra-app-env/versions/latest

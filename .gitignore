@@ -1,0 +1,14 @@
+venv/
+.venv/
+ENV/
+__pycache__/
+logs/
+temp/
+.vscode
+config_backup/
+# PyTorch binaries (adjust paths as needed)
+**/libtorch_*.dylib
+**/libtorch_*.so
+**/*.bin
+youdra_env_json
+.env
