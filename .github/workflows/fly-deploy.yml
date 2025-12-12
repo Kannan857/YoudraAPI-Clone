@@ -52,22 +52,6 @@ jobs:
       - name: Set up Flyctl
         uses: superfly/flyctl-actions/setup-flyctl@v1
 
-      - name: Ensure Fly app exists
-        run: |
-          set -euo pipefail
-          : "${FLY_APP_NAME:=youdraapi-clone}"
-          : "${FLY_PRIMARY_REGION:=sea}"
-          if [ -z "${FLY_API_TOKEN:-}" ]; then
-            echo "Missing Fly API token (set repo secret FLY_API_TOKEN)"; exit 1;
-          fi
-          if ! flyctl apps show "$FLY_APP_NAME" >/dev/null 2>&1; then
-            echo "App $FLY_APP_NAME not found; creating in region $FLY_PRIMARY_REGION"
-            # Use personal org by default; ignore 'already exists' races
-            flyctl apps create "$FLY_APP_NAME" --region "$FLY_PRIMARY_REGION" --org personal || flyctl apps show "$FLY_APP_NAME"
-          else
-            echo "App $FLY_APP_NAME already exists"
-          fi
-
       - name: Set Fly secrets
         run: |
           set -euo pipefail
