@@ -12,28 +12,30 @@ jobs:
     env:
       FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
       FLY_APP_NAME: ${{ vars.FLY_APP_NAME || 'youdraapi-clone' }}
-      POSTGRES_SERVER: ${{ secrets.POSTGRES_SERVER }}
+      # Non-secret config (use repo variables)
+      POSTGRES_SERVER: ${{ vars.POSTGRES_SERVER }}
+      POSTGRES_DB: ${{ vars.POSTGRES_DB }}
+      POSTGRES_PORT: ${{ vars.POSTGRES_PORT || '15580' }}
+      QDRANT_URL: ${{ vars.QDRANT_URL }}
+      QDRANT_ACTIVITY_COLLECTION_NAME: ${{ vars.QDRANT_ACTIVITY_COLLECTION_NAME }}
+      QDRANT_GOAL_BUILDER_COLLECTION_NAME: ${{ vars.QDRANT_GOAL_BUILDER_COLLECTION_NAME }}
+      GOOGLE_CLIENT_ID: ${{ vars.GOOGLE_CLIENT_ID }}
+      LLM_FLAG: ${{ vars.LLM_FLAG || 'gemini' }}
+      RABBITMQ_QUEUE: ${{ vars.RABBITMQ_QUEUE }}
+      RABBITMQ_HOST: ${{ vars.RABBITMQ_HOST }}
+      RABBITMQ_PORT: ${{ vars.RABBITMQ_PORT || '5671' }}
+      RABBITMQ_VHOST: ${{ vars.RABBITMQ_VHOST }}
+      ACCESS_TOKEN_EXPIRE_MINUTES: ${{ vars.ACCESS_TOKEN_EXPIRE_MINUTES || '600' }}
+      # Secrets (use repo secrets)
       POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
       POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-      POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
-      ACCESS_TOKEN_EXPIRE_MINUTES: ${{ secrets.ACCESS_TOKEN_EXPIRE_MINUTES }}
       OPEN_AI_API_KEY: ${{ secrets.OPEN_AI_API_KEY }}
       OPEN_AI_APIKEY: ${{ secrets.OPEN_AI_APIKEY }}
-      QDRANT_URL: ${{ secrets.QDRANT_URL }}
       QDRANT_API_KEY: ${{ secrets.QDRANT_API_KEY }}
-      QDRANT_ACTIVITY_COLLECTION_NAME: ${{ secrets.QDRANT_ACTIVITY_COLLECTION_NAME }}
-      QDRANT_GOAL_BUILDER_COLLECTION_NAME: ${{ secrets.QDRANT_GOAL_BUILDER_COLLECTION_NAME }}
       GOOGLE_GEMINI_API_KEY: ${{ secrets.GOOGLE_GEMINI_API_KEY }}
-      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-      LLM_FLAG: ${{ secrets.LLM_FLAG }}
-      RABBITMQ_QUEUE: ${{ secrets.RABBITMQ_QUEUE }}
       RABBITMQ_USER: ${{ secrets.RABBITMQ_USER }}
       RABBITMQ_PASSWORD: ${{ secrets.RABBITMQ_PASSWORD }}
-      RABBITMQ_HOST: ${{ secrets.RABBITMQ_HOST }}
-      RABBITMQ_PORT: ${{ secrets.RABBITMQ_PORT }}
-      RABBITMQ_VHOST: ${{ secrets.RABBITMQ_VHOST }}
       SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
       STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
       STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
