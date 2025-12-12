@@ -1,8 +1,7 @@
 # Fly.io application configuration
 # Update `app` to the actual Fly app name if different.
 app = "youdraapi-clone"
-# Closest region to Seattle
-primary_region = "sea"
+primary_region = "sjc"
 
 [build]
   dockerfile = "Dockerfile"
