@@ -1,0 +1,13 @@
+.git
+.github
+.venv
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info
+logs/
+temp/
+config_backup/
+.env
+.env.*
+ENV/
